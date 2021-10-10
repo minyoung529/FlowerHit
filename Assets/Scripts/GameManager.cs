@@ -22,6 +22,8 @@ public class GameManager : MonoSingleton<GameManager>
     public int maxCount = 0;
     public int scoreCount = 0;
 
+    public bool isReady = false;
+
     public GameObject apple;
     public SpawnFlowers spawnFlowers;
     public KnifeMove currentKnife;
@@ -32,6 +34,8 @@ public class GameManager : MonoSingleton<GameManager>
     public UIManager UIManager { get; private set; }
 
     public List<Flower> flowers = new List<Flower>();
+    public Flower currentFlower;
+    public int flowerIndex = 0;
     public Sprite[] flowerSprites { get; private set; }
 
     public float radius;
@@ -80,11 +84,12 @@ public class GameManager : MonoSingleton<GameManager>
     {
         spawnFlowers = circle.GetComponent<SpawnFlowers>();
         radius = circle.GetComponent<CircleCollider2D>().radius;
-        knifePosition = new Vector2(0, -3);
+        knifePosition = new Vector2(0, -4);
         UIManager = GetComponent<UIManager>();
+
         UIManager.InstantiateKnifeUI();
         UIManager.FirstSetting();
-        SpaOIns();
+        SpawnOrInstantiate();
         ResetCount();
     }
 
@@ -108,9 +113,12 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void OnClickRestart()
     {
-        isGameOver = true;
-        DespawnKnives();
         isGameOver = false;
+        flowerIndex = 0;
+        UIManager.gameOverPanel.gameObject.SetActive(false);
+        spawnFlowers.DespawnFlowers();
+        DespawnKnives();
+        SpawnOrInstantiate();
         ResetCount();
     }
 
@@ -120,16 +128,16 @@ public class GameManager : MonoSingleton<GameManager>
         {
             knifeMoves[i].DespawnKnife();
         }
-
-        SpaOIns();
     }
 
-    public void SpaOIns()
+    public void SpawnOrInstantiate()
     {
-        if (pool.childCount > 0)
+        if (CheckPool("Knife"))
         {
-            pool.GetChild(0).gameObject.SetActive(true);
-            currentKnife = knifeMoves.Find(knife => knife.gameObject == pool.GetChild(0).gameObject);
+            GameObject obj = ReturnPoolObject("Knife");
+            obj.SetActive(true);
+            obj.transform.SetParent(pool.parent);
+            currentKnife = knifeMoves.Find(knife => knife.gameObject == obj);
         }
 
         else
@@ -146,24 +154,35 @@ public class GameManager : MonoSingleton<GameManager>
             return;
         }
 
-        SpaOIns();
+        SpawnOrInstantiate();
     }
 
     private void ResetCount()
     {
+        circle.SetActive(true);
         curCount = 0;
+        maxCount = Random.Range(7, 13);
+
         UIManager.ResetGame();
         UIManager.RandomFlowerOrder();
     }
 
     public void OnClick()
     {
+        if (isReady)
+        {
+            return;
+        }
+
+        currentFlower = UIManager.currentFlowers[flowerIndex];
         currentKnife.GoGo();
+        isReady = true;
     }
 
     public void GameOver()
     {
         UIManager.GameOver();
+        isGameOver = true;
     }
 
     public void ResetGame()
@@ -173,5 +192,29 @@ public class GameManager : MonoSingleton<GameManager>
     private void OnApplicationQuit()
     {
         SaveToJson();
+    }
+
+    public bool CheckPool(string objName)
+    {
+        for (int i = 0; i < pool.childCount; i++)
+        {
+            if(pool.childCount > 0 && pool.GetChild(i).name.Contains(objName))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public GameObject ReturnPoolObject(string objName)
+    {
+        for (int i = 0; i < pool.childCount; i++)
+        {
+            if (pool.childCount > 0 && pool.GetChild(i).name.Contains(objName))
+            {
+                return pool.GetChild(i).gameObject;
+            }
+        }
+        return null;
     }
 }

@@ -9,8 +9,6 @@ public class KnifeMove : MonoBehaviour
     private Rigidbody2D rigid = null;
     private Collider2D col = null;
 
-    public int speeddddd = 10;
-
     void Start()
     {
         rigid = GetComponent<Rigidbody2D>();
@@ -20,8 +18,9 @@ public class KnifeMove : MonoBehaviour
     public void GoGo()
     {
         GameManager.Instance.UIManager.UsingKnifeUI();
-        rigid.AddForce(Vector2.up * spped, ForceMode2D.Impulse);
+        rigid.AddForce(Vector2.up * spped * 50);
     }
+
     public void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Circle"))
@@ -37,20 +36,21 @@ public class KnifeMove : MonoBehaviour
             GameManager.Instance.GameOver();
         }
 
+        GameManager.Instance.isReady = false;
+        col.enabled = false;
         SetZero();
     }
 
     public void DespawnKnife()
     {
-        if (GameManager.Instance.isGameOver)
-        {
-            gameObject.SetActive(false);
-            transform.SetParent(GameManager.Instance.pool);
-            transform.position = GameManager.Instance.knifePosition;
-            transform.rotation = Quaternion.identity;
+        gameObject.SetActive(false);
+        transform.SetParent(GameManager.Instance.pool);
+        transform.position = GameManager.Instance.knifePosition;
+        transform.rotation = Quaternion.identity;
+        transform.localScale = Vector3.one;
+        col.enabled = true;
 
-            SetZero();
-        }
+        SetZero();
     }
 
     private void SetZero()

@@ -7,7 +7,6 @@ using DG.Tweening;
 public class UIManager : MonoBehaviour
 {
     [SerializeField] private Text maxCountText;
-    [SerializeField] private Text message;
     [SerializeField] private Text scoreTxt;
     public Image gameOverPanel;
 
@@ -20,6 +19,7 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] private Image orderImageTemplate;
     private List<Image> orderImages = new List<Image>();
+    [SerializeField] private List<Sprite> flowerIcons = new List<Sprite>();
 
     public void InstantiateKnifeUI()
     {
@@ -32,43 +32,24 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    private IEnumerator GameOverEffect()
-    {
-        float time = 0.35f;
-        gameOverPanel.gameObject.SetActive(true);
-
-        while (true)
-        {
-            if (!GameManager.Instance.isGameOver)
-            {
-                gameOverPanel.transform.DOScale(new Vector3(0, 0, 0), 0.1f);
-                gameOverPanel.gameObject.SetActive(false);
-                yield break;
-            }
-
-            gameOverPanel.transform.DOScale(new Vector3(1.2f, 1.2f, 1.2f), time);
-            yield return new WaitForSeconds(0.2f);
-            gameOverPanel.transform.DOScale(new Vector3(1f, 1f, 1f), time);
-            yield return new WaitForSeconds(0.2f);
-        }
-
-    }
-
     public void GameOver()
     {
         if (GameManager.Instance.isGameOver) return;
 
-        message.text = "¥‘ ∆–πËûê §ª§ª ¿ﬂ«ÿæπ¥œ¥Á §ª§ª~~~";
-        GameManager.Instance.scoreCount = 0;
-        scoreTxt.text = GameManager.Instance.scoreCount.ToString();
-        GameManager.Instance.isGameOver = true;
-        StartCoroutine(GameOverEffect());
+        gameOverPanel.gameObject.SetActive(true);
+        gameOverPanel.transform.DOScale(1f, 0.3f);
+        orderPanel.transform.DOScale(0f, 0.3f);
+
+        for (int i = 0; i < orderImages.Count; i++)
+        {
+            orderImages[i].transform.GetChild(0).DOScale(0, 0.3f);
+            orderImages[i].transform.GetChild(0).gameObject.SetActive(false);
+        }
     }
 
     public void UpdateUI()
     {
         maxCountText.text = string.Format("{0} / {1}", GameManager.Instance.curCount, GameManager.Instance.maxCount);
-
     }
 
     public void ResetGame()
@@ -81,7 +62,18 @@ public class UIManager : MonoBehaviour
         }
 
         orderPanel.transform.DOScale(0f, 0f);
-        orderPanel.transform.DOScale(0f, 0.5f).OnComplete(() => orderPanel.transform.DOScale(1f, 0.5f));
+        orderPanel.transform.DOScale(1f, 0.3f);
+    }
+
+    public void OnClickRestart()
+    {
+        orderPanel.transform.DOScale(0f, 0f).OnComplete(() => orderPanel.transform.DOScale(1f, 0.5f));
+
+        for (int i = 0; i < orderImages.Count; i++)
+        {
+            orderImages[i].transform.GetChild(0).DOScale(0, 0.3f);
+            orderImages[i].transform.GetChild(0).gameObject.SetActive(false);
+        }
     }
 
     public void UsingKnifeUI()
@@ -97,20 +89,21 @@ public class UIManager : MonoBehaviour
     public void RandomFlowerOrder()
     {
         currentFlowers.Clear();
-        int count = Random.Range(7, 12);
 
-        for (int i = 0; i < count; i++)
+        for (int i = 0; i < GameManager.Instance.maxCount; i++)
         {
             currentFlowers.Add(GameManager.Instance.flowers[Random.Range(0, GameManager.Instance.flowers.Count)]);
             GameManager.Instance.spawnFlowers.FlowerSpawn(currentFlowers[i]);
         }
 
-        for(int i = 0; i < orderImages.Count; i++)
+        GameManager.Instance.currentFlower = currentFlowers[0];
+
+        for (int i = 0; i < orderImages.Count; i++)
         {
-            if(i<count)
+            if (i < GameManager.Instance.maxCount)
             {
                 orderImages[i].color = Color.white;
-                orderImages[i].sprite = GameManager.Instance.flowerSprites[currentFlowers[i].index];
+                orderImages[i].sprite = flowerIcons[currentFlowers[i].index];
             }
 
             else
@@ -129,5 +122,11 @@ public class UIManager : MonoBehaviour
             orderImages.Add(obj.GetComponent<Image>());
             obj.SetActive(true);
         }
+    }
+
+    public void CheckFlowerIcons(int index)
+    {
+        orderImages[index].transform.GetChild(0).gameObject.SetActive(true);
+        orderImages[index].transform.GetChild(0).DOScale(1, 0.3f);
     }
 }

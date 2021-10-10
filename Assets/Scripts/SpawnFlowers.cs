@@ -5,25 +5,23 @@ using UnityEngine;
 public class SpawnFlowers : MonoBehaviour
 {
     [SerializeField] private CircleCollider2D col;
-    [SerializeField] private GameObject apple;
-    private List<Flower> currentFlowers;
+    [SerializeField] private GameObject flower;
     private List<FlowerObject> flowerObjects = new List<FlowerObject>();
 
     int count = 0;
 
-
-    
     public void FlowerSpawn(Flower flower)
     {
-        GameObject obj = Instantiate(apple);
-        FlowerObject flowerObj = obj.GetComponent<FlowerObject>();
+        GameObject obj = SpawnOrPool();
+        FlowerObject flowerObj = flowerObjects.Find(flower => flower.gameObject == obj);
+        flowerObj ??= obj.GetComponent<FlowerObject>();
 
         obj.transform.SetParent(transform);
         SetRandomPos(obj);
 
         for (int i = 0; i < flowerObjects.Count; i++)
         {
-            while(Vector2.Distance(flowerObjects[i].transform.localPosition, obj.transform.localPosition) < 0.3f)
+            while (flowerObjects[i].gameObject.activeSelf && Vector2.Distance(flowerObjects[i].transform.localPosition, obj.transform.localPosition) < 0.3f)
             {
                 SetRandomPos(obj);
                 i = 0;
@@ -43,5 +41,26 @@ public class SpawnFlowers : MonoBehaviour
             x *= -1;
 
         obj.transform.localPosition = new Vector2(x, y);
+    }
+
+    public void DespawnFlowers()
+    {
+        foreach (FlowerObject obj in flowerObjects)
+        {
+            obj.Despawn();
+        }
+    }
+
+    private GameObject SpawnOrPool()
+    {
+        if (GameManager.Instance.CheckPool("Flower"))
+        {
+            return GameManager.Instance.ReturnPoolObject("Flower");
+        }
+
+        else
+        {
+            return Instantiate(flower);
+        }
     }
 }
