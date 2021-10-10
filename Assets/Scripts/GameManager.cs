@@ -83,6 +83,7 @@ public class GameManager : MonoSingleton<GameManager>
         knifePosition = new Vector2(0, -3);
         UIManager = GetComponent<UIManager>();
         UIManager.InstantiateKnifeUI();
+        UIManager.FirstSetting();
         SpaOIns();
         ResetCount();
     }
@@ -151,9 +152,7 @@ public class GameManager : MonoSingleton<GameManager>
     private void ResetCount()
     {
         curCount = 0;
-
         UIManager.ResetGame();
-
         UIManager.RandomFlowerOrder();
     }
 

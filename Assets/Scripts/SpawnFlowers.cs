@@ -23,7 +23,7 @@ public class SpawnFlowers : MonoBehaviour
 
         for (int i = 0; i < flowerObjects.Count; i++)
         {
-            while(Vector2.Distance(flowerObjects[i].transform.localPosition, obj.transform.localPosition) < 0.4f)
+            while(Vector2.Distance(flowerObjects[i].transform.localPosition, obj.transform.localPosition) < 0.3f)
             {
                 SetRandomPos(obj);
                 i = 0;

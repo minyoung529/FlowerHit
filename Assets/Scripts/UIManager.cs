@@ -13,9 +13,13 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] private GameObject knifeUI;
     [SerializeField] private Transform knifeUITransform;
+    [SerializeField] private Image orderPanel;
+
     private List<GameObject> knifeUIs = new List<GameObject>();
     public List<Flower> currentFlowers = new List<Flower>();
 
+    [SerializeField] private Image orderImageTemplate;
+    private List<Image> orderImages = new List<Image>();
 
     public void InstantiateKnifeUI()
     {
@@ -75,6 +79,9 @@ public class UIManager : MonoBehaviour
         {
             knifeUIs[i].SetActive(true);
         }
+
+        orderPanel.transform.DOScale(0f, 0f);
+        orderPanel.transform.DOScale(0f, 0.5f).OnComplete(() => orderPanel.transform.DOScale(1f, 0.5f));
     }
 
     public void UsingKnifeUI()
@@ -95,11 +102,32 @@ public class UIManager : MonoBehaviour
         for (int i = 0; i < count; i++)
         {
             currentFlowers.Add(GameManager.Instance.flowers[Random.Range(0, GameManager.Instance.flowers.Count)]);
+            GameManager.Instance.spawnFlowers.FlowerSpawn(currentFlowers[i]);
         }
 
-        for (int i = 0; i < count; i++)
+        for(int i = 0; i < orderImages.Count; i++)
         {
-            GameManager.Instance.spawnFlowers.FlowerSpawn(currentFlowers[i]);
+            if(i<count)
+            {
+                orderImages[i].color = Color.white;
+                orderImages[i].sprite = GameManager.Instance.flowerSprites[currentFlowers[i].index];
+            }
+
+            else
+            {
+                orderImages[i].color = Color.clear;
+            }
+
+        }
+    }
+
+    public void FirstSetting()
+    {
+        for (int i = 0; i < 12; i++)
+        {
+            GameObject obj = Instantiate(orderImageTemplate.gameObject, orderImageTemplate.transform.parent);
+            orderImages.Add(obj.GetComponent<Image>());
+            obj.SetActive(true);
         }
     }
 }
