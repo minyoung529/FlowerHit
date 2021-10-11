@@ -149,6 +149,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void Complete()
     {
+        //나중에고칠것~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         if (curCount == maxCount)
         {
             OnClickRestart();
@@ -162,7 +163,7 @@ public class GameManager : MonoSingleton<GameManager>
     {
         circle.SetActive(true);
         curCount = 0;
-        maxCount = Random.Range(7, 13);
+        maxCount = Random.Range(6, 10);
 
         UIManager.ResetGame();
         UIManager.RandomFlowerOrder();

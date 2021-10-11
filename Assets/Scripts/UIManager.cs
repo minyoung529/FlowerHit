@@ -20,6 +20,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Image orderImageTemplate;
     private List<Image> orderImages = new List<Image>();
     [SerializeField] private List<Sprite> flowerIcons = new List<Sprite>();
+    [SerializeField] private Image currentFlowerImage;
 
     public void InstantiateKnifeUI()
     {
@@ -96,7 +97,14 @@ public class UIManager : MonoBehaviour
             GameManager.Instance.spawnFlowers.FlowerSpawn(currentFlowers[i]);
         }
 
+        for (int i = 0; i < Random.Range(3, 6); i++)
+        {
+            if (i + GameManager.Instance.maxCount > 15) break;
+            GameManager.Instance.spawnFlowers.FlowerSpawn(GameManager.Instance.flowers[Random.Range(0, GameManager.Instance.flowers.Count)]);
+        }
+
         GameManager.Instance.currentFlower = currentFlowers[0];
+        currentFlowerImage.sprite = flowerIcons[GameManager.Instance.currentFlower.index];
 
         for (int i = 0; i < orderImages.Count; i++)
         {
@@ -128,5 +136,10 @@ public class UIManager : MonoBehaviour
     {
         orderImages[index].transform.GetChild(0).gameObject.SetActive(true);
         orderImages[index].transform.GetChild(0).DOScale(1, 0.3f);
+    }
+
+    public void ChangeCurrentFlowerImage()
+    {
+        currentFlowerImage.sprite = flowerIcons[GameManager.Instance.currentFlower.index];
     }
 }
