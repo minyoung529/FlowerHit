@@ -9,6 +9,8 @@ public class KnifeMove : MonoBehaviour
     private Rigidbody2D rigid = null;
     private Collider2D col = null;
 
+    public bool isTouch;
+
     void Start()
     {
         rigid = GetComponent<Rigidbody2D>();
@@ -37,7 +39,6 @@ public class KnifeMove : MonoBehaviour
         }
 
         GameManager.Instance.isReady = false;
-        col.enabled = false;
         SetZero();
     }
 
@@ -47,9 +48,8 @@ public class KnifeMove : MonoBehaviour
         transform.SetParent(GameManager.Instance.pool);
         transform.position = GameManager.Instance.knifePosition;
         transform.rotation = Quaternion.identity;
-        transform.localScale = Vector3.one;
-        col.enabled = true;
-
+        transform.localScale = new Vector3(0.8f, 0.8f, 0.8f);
+        isTouch = false;
         SetZero();
     }
 

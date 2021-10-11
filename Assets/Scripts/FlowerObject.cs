@@ -7,28 +7,37 @@ public class FlowerObject : MonoBehaviour
 {
     public BoxCollider2D col = null;
     public ParticleSystem particle = null;
+    private ParticleSystem.MainModule pm;
 
     [SerializeField] private SpriteRenderer spriteRenderer;
     private Flower flower;
+
+    private void Start()
+    {
+        pm = particle.main;
+    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Knife")
         {
-            if(flower.flowerName != GameManager.Instance.currentFlower.flowerName)
+            if (GameManager.Instance.currentKnife.isTouch) return;
+
+            if (flower.flowerName != GameManager.Instance.currentFlower.flowerName)
             {
-                StartCoroutine(RedLight());
                 GameManager.Instance.GameOver();
+                StartCoroutine(RedLight());
                 return;
             }
 
+            GameManager.Instance.currentKnife.isTouch = true;
             particle.Play();
             GameManager.Instance.UIManager.CheckFlowerIcons(GameManager.Instance.flowerIndex);
             GameManager.Instance.flowerIndex++;
             GameManager.Instance.currentFlower = GameManager.Instance.UIManager.currentFlowers[GameManager.Instance.flowerIndex];
             GameManager.Instance.scoreCount++;
             GameManager.Instance.UIManager.UpdateApple();
-            gameObject.SetActive(false);
+            StartCoroutine(Active());
         }
     }
 
@@ -40,7 +49,8 @@ public class FlowerObject : MonoBehaviour
         spriteRenderer.sprite = GameManager.Instance.flowerSprites[flower.index];
         gameObject.SetActive(true);
 
-        float rotZ = 180 - (180f * (transform.localPosition.y + radius) * (1 / (radius * 2)));
+        float rotZ = 180 - (180f * (transform.localPosition.y + radius) * (1 / (radius * 2)))
+            + GameManager.Instance.GetCircle().transform.rotation.z;
 
 
         if (transform.localPosition.x > 0)
@@ -56,7 +66,7 @@ public class FlowerObject : MonoBehaviour
 
     private void EditColliderSize()
     {
-        switch(flower.flowerName)
+        switch (flower.flowerName)
         {
             case "µ•¿Ã¡ˆ":
                 col.offset = new Vector2(0f, 0.5f);
@@ -92,7 +102,7 @@ public class FlowerObject : MonoBehaviour
 
     IEnumerator RedLight()
     {
-        for(int i = 0; i<5; i++)
+        for (int i = 0; i < 5; i++)
         {
             if (!GameManager.Instance.isGameOver)
             {
@@ -107,5 +117,14 @@ public class FlowerObject : MonoBehaviour
         }
 
         spriteRenderer.color = Color.white;
+    }
+
+    private IEnumerator Active()
+    {
+        spriteRenderer.color = Color.clear;
+        yield return new WaitForSeconds(pm.duration+1f);
+        gameObject.SetActive(false);
+        spriteRenderer.color = Color.white;
+        yield break;
     }
 }

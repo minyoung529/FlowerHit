@@ -33,8 +33,7 @@ public class CircleRotation : MonoBehaviour
         isRot = false;
         StopCoroutine("CirRotation");
         transform.DOScale(0f, 0f);
-        transform.DOScale(1f, 0.3f);
-        transform.rotation = Quaternion.identity;
-        StartCoroutine(CirRotation());
+        transform.DOScale(1f, 0.3f);    
+        StartCoroutine("CirRotation");
     }
 }

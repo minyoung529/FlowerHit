@@ -116,6 +116,7 @@ public class GameManager : MonoSingleton<GameManager>
         isGameOver = false;
         flowerIndex = 0;
         UIManager.gameOverPanel.gameObject.SetActive(false);
+        circle.SetActive(false);
         spawnFlowers.DespawnFlowers();
         DespawnKnives();
         SpawnOrInstantiate();

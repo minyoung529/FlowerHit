@@ -8,8 +8,6 @@ public class SpawnFlowers : MonoBehaviour
     [SerializeField] private GameObject flower;
     private List<FlowerObject> flowerObjects = new List<FlowerObject>();
 
-    int count = 0;
-
     public void FlowerSpawn(Flower flower)
     {
         GameObject obj = SpawnOrPool();
