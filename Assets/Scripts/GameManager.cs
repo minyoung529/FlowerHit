@@ -89,8 +89,6 @@ public class GameManager : MonoSingleton<GameManager>
 
         UIManager.InstantiateKnifeUI();
         UIManager.FirstSetting();
-        SpawnOrInstantiate();
-        ResetCount();
     }
 
     public void SpawnKnife()
@@ -111,16 +109,36 @@ public class GameManager : MonoSingleton<GameManager>
         return circle;
     }
 
+    public void OnClickBubble()
+    {
+        StartCoroutine(WaitStart());
+    }
     public void OnClickRestart()
     {
+        StartCoroutine(WaitReady());
         isGameOver = false;
         flowerIndex = 0;
         UIManager.gameOverPanel.gameObject.SetActive(false);
+        UIManager.OnClickRestart();
         circle.SetActive(false);
         spawnFlowers.DespawnFlowers();
         DespawnKnives();
         SpawnOrInstantiate();
         ResetCount();
+    }
+
+    private IEnumerator WaitReady()
+    {
+        isReady = true;
+        yield return new WaitForSeconds(0.5f);
+        isReady = false;
+        yield break;
+    }
+
+    private IEnumerator WaitStart()
+    {
+        yield return new WaitForSeconds(1f);
+        OnClickRestart();
     }
 
     public void DespawnKnives()
@@ -149,10 +167,10 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void Complete()
     {
-        //나중에고칠것~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        if (curCount == maxCount)
+        if (flowerIndex == UIManager.currentFlowers.Count)
         {
-            OnClickRestart();
+            //UIManager.OnClickRestart();
+            UIManager.GoMainScene();
             return;
         }
 
@@ -200,7 +218,7 @@ public class GameManager : MonoSingleton<GameManager>
     {
         for (int i = 0; i < pool.childCount; i++)
         {
-            if(pool.childCount > 0 && pool.GetChild(i).name.Contains(objName))
+            if (pool.childCount > 0 && pool.GetChild(i).name.Contains(objName))
             {
                 return true;
             }

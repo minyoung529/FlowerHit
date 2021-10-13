@@ -22,6 +22,13 @@ public class UIManager : MonoBehaviour
     [SerializeField] private List<Sprite> flowerIcons = new List<Sprite>();
     [SerializeField] private Image currentFlowerImage;
 
+    [SerializeField] private GameObject mainGameScene;
+    [SerializeField] private GameObject mainUIScene;
+    [SerializeField] private GameObject inGameScene;
+    [SerializeField] private GameObject inGameUIScene;
+
+    [SerializeField] private SpriteRenderer guest;
+
     public void InstantiateKnifeUI()
     {
         GameObject obj;
@@ -40,6 +47,7 @@ public class UIManager : MonoBehaviour
         gameOverPanel.gameObject.SetActive(true);
         gameOverPanel.transform.DOScale(1f, 0.3f);
         orderPanel.transform.DOScale(0f, 0.3f);
+        gameOverPanel.transform.DOShakePosition(1.2f, 1).OnComplete(() => GoMainScene());
 
         for (int i = 0; i < orderImages.Count; i++)
         {
@@ -141,5 +149,35 @@ public class UIManager : MonoBehaviour
     public void ChangeCurrentFlowerImage()
     {
         currentFlowerImage.sprite = flowerIcons[GameManager.Instance.currentFlower.index];
+    }
+
+    public void GoMainScene()
+    {
+        mainGameScene.transform.DOMove(Vector3.zero, 1f);
+        mainUIScene.transform.DOMove(Vector3.zero, 1f);
+
+        inGameUIScene.transform.DOMoveY(-13, 1f);
+        inGameScene.transform.DOMoveY(-13, 1f);
+    }
+
+    public void Failure()
+    {
+        StartCoroutine(AngryGuest(true));
+    }
+
+    private IEnumerator AngryGuest(bool isAngry)
+    {
+        Debug.Log("Sdf");
+        yield return new WaitForSeconds(1f);
+        if(isAngry)
+        {
+            guest.DOColor(Color.red, 1f);
+        }
+
+        yield return new WaitForSeconds(1f);
+        guest.transform.DOMove(new Vector3(5, -2, 0), 0.5f).OnComplete(() => guest.DOColor(Color.white, 0f));
+        yield return new WaitForSeconds(0.5f);
+        guest.transform.position = new Vector3(-5, -2, 0);
+        guest.transform.DOMove(new Vector3(0, -2, 0), 0.3f);
     }
 }

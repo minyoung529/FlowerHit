@@ -26,6 +26,7 @@ public class FlowerObject : MonoBehaviour
             if (flower.flowerName != GameManager.Instance.currentFlower.flowerName)
             {
                 GameManager.Instance.GameOver();
+                GameManager.Instance.UIManager.Failure();
                 StartCoroutine(RedLight());
                 return;
             }
@@ -34,7 +35,10 @@ public class FlowerObject : MonoBehaviour
             particle.Play();
             GameManager.Instance.UIManager.CheckFlowerIcons(GameManager.Instance.flowerIndex);
             GameManager.Instance.flowerIndex++;
-            GameManager.Instance.currentFlower = GameManager.Instance.UIManager.currentFlowers[GameManager.Instance.flowerIndex];
+            if(GameManager.Instance.flowerIndex < GameManager.Instance.UIManager.currentFlowers.Count)
+            {
+                GameManager.Instance.currentFlower = GameManager.Instance.UIManager.currentFlowers[GameManager.Instance.flowerIndex];
+            }
             GameManager.Instance.scoreCount++;
             GameManager.Instance.UIManager.UpdateApple();
             GameManager.Instance.UIManager.ChangeCurrentFlowerImage();

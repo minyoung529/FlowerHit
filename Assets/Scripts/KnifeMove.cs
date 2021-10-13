@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class KnifeMove : MonoBehaviour
 {
@@ -20,18 +21,24 @@ public class KnifeMove : MonoBehaviour
     public void GoGo()
     {
         GameManager.Instance.UIManager.UsingKnifeUI();
-        rigid.AddForce(Vector2.up * spped * 50);
+        rigid.AddForce(Vector2.up * spped * 65);
     }
 
-    public void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Circle"))
         {
             transform.SetParent(collision.transform);
             GameManager.Instance.curCount++;
             GameManager.Instance.Complete();
+            rigid.velocity = Vector3.zero;
+            GameManager.Instance.isReady = false;
+            SetZero();
         }
+    }
 
+    public void OnCollisionEnter2D(Collision2D collision)
+    {
         if (collision.gameObject.CompareTag("Knife"))
         {
             transform.SetParent(GameManager.Instance.GetCircle().transform);
@@ -49,6 +56,7 @@ public class KnifeMove : MonoBehaviour
         transform.position = GameManager.Instance.knifePosition;
         transform.rotation = Quaternion.identity;
         transform.localScale = new Vector3(0.8f, 0.8f, 0.8f);
+        col.enabled = true;
         isTouch = false;
         SetZero();
     }
@@ -58,4 +66,5 @@ public class KnifeMove : MonoBehaviour
         rigid.velocity = Vector2.zero;
         rigid.angularVelocity = 0f;
     }
+
 }
