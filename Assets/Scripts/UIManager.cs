@@ -29,6 +29,8 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] private SpriteRenderer guest;
 
+    private bool isEnd;
+
     public void InstantiateKnifeUI()
     {
         GameObject obj;
@@ -162,22 +164,27 @@ public class UIManager : MonoBehaviour
 
     public void Failure()
     {
+        if (isEnd) return;
+
         StartCoroutine(AngryGuest(true));
     }
 
     private IEnumerator AngryGuest(bool isAngry)
     {
+        isEnd = true;
         Debug.Log("Sdf");
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(2f);
+
         if(isAngry)
         {
-            guest.DOColor(Color.red, 1f);
+            guest.DOColor(Color.red, 1.5f);
         }
 
         yield return new WaitForSeconds(1f);
         guest.transform.DOMove(new Vector3(5, -2, 0), 0.5f).OnComplete(() => guest.DOColor(Color.white, 0f));
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(2f);
         guest.transform.position = new Vector3(-5, -2, 0);
         guest.transform.DOMove(new Vector3(0, -2, 0), 0.3f);
+        isEnd = false;
     }
 }
