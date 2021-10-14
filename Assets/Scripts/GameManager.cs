@@ -40,6 +40,13 @@ public class GameManager : MonoSingleton<GameManager>
 
     public float radius;
 
+    [TextArea]
+    public string[] guestOrder;
+    [TextArea]
+    public string[] happyScript;
+    [TextArea]
+    public string[] angryScript;
+
     #region 데이터저장
     private void Awake()
     {
@@ -87,7 +94,6 @@ public class GameManager : MonoSingleton<GameManager>
         knifePosition = new Vector2(0, -4);
         UIManager = GetComponent<UIManager>();
 
-        UIManager.InstantiateKnifeUI();
         UIManager.FirstSetting();
     }
 
@@ -121,10 +127,15 @@ public class GameManager : MonoSingleton<GameManager>
         UIManager.gameOverPanel.gameObject.SetActive(false);
         UIManager.OnClickRestart();
         circle.SetActive(false);
-        spawnFlowers.DespawnFlowers();
-        DespawnKnives();
+        
         SpawnOrInstantiate();
         ResetCount();
+    }
+
+    public void Pooling()
+    {
+        spawnFlowers.DespawnFlowers();
+        DespawnKnives();
     }
 
     private IEnumerator WaitReady()
@@ -171,6 +182,7 @@ public class GameManager : MonoSingleton<GameManager>
         {
             //UIManager.OnClickRestart();
             UIManager.GoMainScene();
+            UIManager.Success();
             return;
         }
 
@@ -205,10 +217,6 @@ public class GameManager : MonoSingleton<GameManager>
         isGameOver = true;
     }
 
-    public void ResetGame()
-    {
-
-    }
     private void OnApplicationQuit()
     {
         SaveToJson();

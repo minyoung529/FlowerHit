@@ -20,7 +20,6 @@ public class KnifeMove : MonoBehaviour
 
     public void GoGo()
     {
-        GameManager.Instance.UIManager.UsingKnifeUI();
         rigid.AddForce(Vector2.up * spped * 65);
     }
 
@@ -43,6 +42,7 @@ public class KnifeMove : MonoBehaviour
         {
             transform.SetParent(GameManager.Instance.GetCircle().transform);
             GameManager.Instance.GameOver();
+            GameManager.Instance.UIManager.Failure();
         }
 
         GameManager.Instance.isReady = false;

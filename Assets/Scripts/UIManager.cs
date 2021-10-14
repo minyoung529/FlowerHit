@@ -6,15 +6,10 @@ using DG.Tweening;
 
 public class UIManager : MonoBehaviour
 {
-    [SerializeField] private Text maxCountText;
-    [SerializeField] private Text scoreTxt;
     public Image gameOverPanel;
 
-    [SerializeField] private GameObject knifeUI;
-    [SerializeField] private Transform knifeUITransform;
     [SerializeField] private Image orderPanel;
 
-    private List<GameObject> knifeUIs = new List<GameObject>();
     public List<Flower> currentFlowers = new List<Flower>();
 
     [SerializeField] private Image orderImageTemplate;
@@ -26,30 +21,32 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject mainUIScene;
     [SerializeField] private GameObject inGameScene;
     [SerializeField] private GameObject inGameUIScene;
+    [SerializeField] private Button speechBubble;
 
     [SerializeField] private SpriteRenderer guest;
 
+    [SerializeField] private Text guestText;
+    [SerializeField] private Text moneyText;
+
+    public Sprite[] guests;
+
+    Guest guestScript;
+
     private bool isEnd;
 
-    public void InstantiateKnifeUI()
+    public void UpdatePanel()
     {
-        GameObject obj;
-
-        for (int i = 0; i < 15; i++)
-        {
-            obj = Instantiate(knifeUI, knifeUITransform);
-            knifeUIs.Add(obj);
-        }
+        moneyText.text = string.Format("{0}¿ø", GameManager.Instance.CurrentUser.coin);
     }
-
     public void GameOver()
     {
         if (GameManager.Instance.isGameOver) return;
+        if (isEnd) return;
 
         gameOverPanel.gameObject.SetActive(true);
         gameOverPanel.transform.DOScale(1f, 0.3f);
         orderPanel.transform.DOScale(0f, 0.3f);
-        gameOverPanel.transform.DOShakePosition(1.2f, 1).OnComplete(() => GoMainScene());
+        gameOverPanel.transform.DOShakePosition(1.5f, 30).OnComplete(() => GoMainScene());
 
         for (int i = 0; i < orderImages.Count; i++)
         {
@@ -58,26 +55,17 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void UpdateUI()
-    {
-        maxCountText.text = string.Format("{0} / {1}", GameManager.Instance.curCount, GameManager.Instance.maxCount);
-    }
-
     public void ResetGame()
     {
-        maxCountText.text = string.Format("{0} / {1}", GameManager.Instance.curCount, GameManager.Instance.maxCount);
-
-        for (int i = 0; i < Random.Range(4, 9); i++)
-        {
-            knifeUIs[i].SetActive(true);
-        }
-
+        gameOverPanel.gameObject.SetActive(false);
+        orderPanel.gameObject.SetActive(true);
         orderPanel.transform.DOScale(0f, 0f);
         orderPanel.transform.DOScale(1f, 0.3f);
     }
 
     public void OnClickRestart()
     {
+        orderPanel.gameObject.SetActive(true);
         orderPanel.transform.DOScale(0f, 0f).OnComplete(() => orderPanel.transform.DOScale(1f, 0.5f));
 
         for (int i = 0; i < orderImages.Count; i++)
@@ -85,16 +73,6 @@ public class UIManager : MonoBehaviour
             orderImages[i].transform.GetChild(0).DOScale(0, 0.3f);
             orderImages[i].transform.GetChild(0).gameObject.SetActive(false);
         }
-    }
-
-    public void UsingKnifeUI()
-    {
-        knifeUIs[GameManager.Instance.curCount].SetActive(false);
-    }
-
-    public void UpdateApple()
-    {
-        scoreTxt.text = GameManager.Instance.scoreCount.ToString();
     }
 
     public void RandomFlowerOrder()
@@ -140,6 +118,8 @@ public class UIManager : MonoBehaviour
             orderImages.Add(obj.GetComponent<Image>());
             obj.SetActive(true);
         }
+        guestScript = FindObjectOfType<Guest>();
+        UpdatePanel();
     }
 
     public void CheckFlowerIcons(int index)
@@ -162,6 +142,12 @@ public class UIManager : MonoBehaviour
         inGameScene.transform.DOMoveY(-13, 1f);
     }
 
+    public void Success()
+    {
+        if (isEnd) return;
+        StartCoroutine(AngryGuest(false));
+    }
+
     public void Failure()
     {
         if (isEnd) return;
@@ -172,19 +158,40 @@ public class UIManager : MonoBehaviour
     private IEnumerator AngryGuest(bool isAngry)
     {
         isEnd = true;
-        Debug.Log("Sdf");
         yield return new WaitForSeconds(2f);
 
-        if(isAngry)
+        if (isAngry)
         {
             guest.DOColor(Color.red, 1.5f);
         }
 
+        if (isAngry)
+        {
+            guestText.text = GameManager.Instance.angryScript[Random.Range(0, GameManager.Instance.angryScript.Length)];
+            guestScript.Angry();
+        }
+        else
+        {
+            guestText.text = GameManager.Instance.happyScript[Random.Range(0, GameManager.Instance.happyScript.Length)];
+            guestScript.Happy();
+            GameManager.Instance.CurrentUser.coin += 100;
+            UpdatePanel();
+        }
+
         yield return new WaitForSeconds(1f);
         guest.transform.DOMove(new Vector3(5, -2, 0), 0.5f).OnComplete(() => guest.DOColor(Color.white, 0f));
-        yield return new WaitForSeconds(2f);
+
+        speechBubble.transform.DOScale(0f, 0.3f);
+        yield return new WaitForSeconds(Random.Range(2f, 4f));
+        guestText.text = GameManager.Instance.guestOrder[Random.Range(0, GameManager.Instance.guestOrder.Length)];
+        speechBubble.transform.DOScale(1f, 0.3f);
         guest.transform.position = new Vector3(-5, -2, 0);
+        guest.sprite = guests[Random.Range(0, guests.Length)];
         guest.transform.DOMove(new Vector3(0, -2, 0), 0.3f);
+
+        gameOverPanel.gameObject.SetActive(false);
+        orderPanel.gameObject.SetActive(false);
+        GameManager.Instance.Pooling();
         isEnd = false;
     }
 }

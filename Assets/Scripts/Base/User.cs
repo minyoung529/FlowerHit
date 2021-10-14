@@ -1,6 +1,6 @@
 ﻿[System.Serializable]
 public class User
 {
-    int sellCount;
-    int coin;
+    public int sellCount;
+    public int coin;
 }

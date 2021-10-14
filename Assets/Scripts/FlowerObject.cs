@@ -40,7 +40,6 @@ public class FlowerObject : MonoBehaviour
                 GameManager.Instance.currentFlower = GameManager.Instance.UIManager.currentFlowers[GameManager.Instance.flowerIndex];
             }
             GameManager.Instance.scoreCount++;
-            GameManager.Instance.UIManager.UpdateApple();
             GameManager.Instance.UIManager.ChangeCurrentFlowerImage();
             StartCoroutine(Active());
         }
