@@ -1,4 +1,4 @@
 ﻿{
     "sellCount": 0,
-    "coin": 800
+    "coin": 900
 }
