@@ -19,4 +19,16 @@ public class MoveUpDown : MonoBehaviour
     {
         transform.DOMove(Vector2.zero, 1f);
     }
+
+    public void GoToGame_Main()
+    {
+        if (GameManager.Instance.UIManager.isEnd) return;
+        transform.DOMoveY(13, 1f);
+    }
+
+    public void GoToGame_Game()
+    {
+        if (GameManager.Instance.UIManager.isEnd) return;
+        transform.DOMove(Vector2.zero, 1f);
+    }
 }

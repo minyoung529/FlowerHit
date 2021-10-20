@@ -117,6 +117,8 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void OnClickBubble()
     {
+        if (UIManager.isEnd) return;
+
         StartCoroutine(WaitStart());
     }
     public void OnClickRestart()
@@ -201,10 +203,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void OnClick()
     {
-        if (isReady)
-        {
-            return;
-        }
+        if (isReady) return;
 
         currentFlower = UIManager.currentFlowers[flowerIndex];
         currentKnife.GoGo();

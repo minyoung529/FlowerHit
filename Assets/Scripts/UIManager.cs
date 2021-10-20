@@ -27,12 +27,15 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] private Text guestText;
     [SerializeField] private Text moneyText;
+    [SerializeField] private Text helpText;
+
+    public ParticleSystem money;
 
     public Sprite[] guests;
 
     Guest guestScript;
 
-    private bool isEnd;
+    public bool isEnd { get; private set; }
 
     public void UpdatePanel()
     {
@@ -120,6 +123,9 @@ public class UIManager : MonoBehaviour
         }
         guestScript = FindObjectOfType<Guest>();
         UpdatePanel();
+
+        guestText.text = "";
+        guestText.DOText(GameManager.Instance.guestOrder[Random.Range(0, GameManager.Instance.guestOrder.Length)], 1f);
     }
 
     public void CheckFlowerIcons(int index)
@@ -158,7 +164,10 @@ public class UIManager : MonoBehaviour
     private IEnumerator AngryGuest(bool isAngry)
     {
         isEnd = true;
+        helpText.gameObject.SetActive(false);
         yield return new WaitForSeconds(2f);
+
+        guestText.text = "";
 
         if (isAngry)
         {
@@ -167,23 +176,25 @@ public class UIManager : MonoBehaviour
 
         if (isAngry)
         {
-            guestText.text = GameManager.Instance.angryScript[Random.Range(0, GameManager.Instance.angryScript.Length)];
+            guestText.DOText(GameManager.Instance.angryScript[Random.Range(0, GameManager.Instance.angryScript.Length)], 1f);
             guestScript.Angry();
         }
         else
         {
-            guestText.text = GameManager.Instance.happyScript[Random.Range(0, GameManager.Instance.happyScript.Length)];
+            guestText.DOText(GameManager.Instance.happyScript[Random.Range(0, GameManager.Instance.happyScript.Length)], 1f);
             guestScript.Happy();
             GameManager.Instance.CurrentUser.coin += 100;
+            money.Play();
             UpdatePanel();
         }
 
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(2.6f);
         guest.transform.DOMove(new Vector3(5, -2, 0), 0.5f).OnComplete(() => guest.DOColor(Color.white, 0f));
 
         speechBubble.transform.DOScale(0f, 0.3f);
         yield return new WaitForSeconds(Random.Range(2f, 4f));
-        guestText.text = GameManager.Instance.guestOrder[Random.Range(0, GameManager.Instance.guestOrder.Length)];
+        guestText.text = "";
+        guestText.DOText(GameManager.Instance.guestOrder[Random.Range(0, GameManager.Instance.guestOrder.Length)], 1f);
         speechBubble.transform.DOScale(1f, 0.3f);
         guest.transform.position = new Vector3(-5, -2, 0);
         guest.sprite = guests[Random.Range(0, guests.Length)];
@@ -192,6 +203,8 @@ public class UIManager : MonoBehaviour
         gameOverPanel.gameObject.SetActive(false);
         orderPanel.gameObject.SetActive(false);
         GameManager.Instance.Pooling();
+        helpText.gameObject.SetActive(true);
+
         isEnd = false;
     }
 }
