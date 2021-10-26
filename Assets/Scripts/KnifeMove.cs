@@ -38,6 +38,7 @@ public class KnifeMove : MonoBehaviour
 
     public void OnCollisionEnter2D(Collision2D collision)
     {
+        if (isTouch) return;
         if (collision.gameObject.CompareTag("Knife"))
         {
             transform.SetParent(GameManager.Instance.GetCircle().transform);

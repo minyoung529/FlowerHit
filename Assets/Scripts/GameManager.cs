@@ -28,6 +28,7 @@ public class GameManager : MonoSingleton<GameManager>
     public SpawnFlowers spawnFlowers;
     public KnifeMove currentKnife;
 
+    [SerializeField]
     private User user;
     public User CurrentUser { get { return user; } }
 
@@ -46,6 +47,8 @@ public class GameManager : MonoSingleton<GameManager>
     public string[] happyScript;
     [TextArea]
     public string[] angryScript;
+
+    public Sprite[] shovelSprites;
 
     #region 데이터저장
     private void Awake()

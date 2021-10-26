@@ -56,7 +56,6 @@ public class FlowerObject : MonoBehaviour
         float rotZ = 180 - (180f * (transform.localPosition.y + radius) * (1 / (radius * 2)))
             + GameManager.Instance.GetCircle().transform.rotation.z;
 
-
         if (transform.localPosition.x > 0)
         {
             rotZ *= -1f;

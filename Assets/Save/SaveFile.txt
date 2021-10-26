@@ -1,4 +1,21 @@
 ﻿{
     "sellCount": 0,
-    "coin": 1500
+    "coin": 0,
+    "shovels": [
+        {
+            "index": 0,
+            "isHaving": true,
+            "price": 0
+        },
+        {
+            "index": 1,
+            "isHaving": false,
+            "price": 1000
+        },
+        {
+            "index": 1,
+            "isHaving": false,
+            "price": 3000
+        }
+    ]
 }

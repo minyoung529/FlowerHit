@@ -29,6 +29,10 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Text moneyText;
     [SerializeField] private Text helpText;
 
+    [SerializeField] GameObject storePanelObject;
+
+    List<ProductPanel> productPanels = new List<ProductPanel>();
+
     public ParticleSystem money;
 
     public Sprite[] guests;
@@ -37,10 +41,27 @@ public class UIManager : MonoBehaviour
 
     public bool isEnd { get; private set; }
 
+    private void Start()
+    {
+        InstantiatePanel();
+    }
     public void UpdatePanel()
     {
         moneyText.text = string.Format("{0}¿ø", GameManager.Instance.CurrentUser.coin);
     }
+
+    private void InstantiatePanel()
+    {
+        for (int i = 0; i < GameManager.Instance.CurrentUser.shovels.Count; i++)
+        {
+            GameObject obj = Instantiate(storePanelObject, storePanelObject.transform.parent);
+            ProductPanel pp = obj.GetComponent<ProductPanel>();
+            pp.SetValue(i);
+            productPanels.Add(pp);
+        }
+        storePanelObject.SetActive(false);
+    }
+
     public void GameOver()
     {
         if (GameManager.Instance.isGameOver) return;

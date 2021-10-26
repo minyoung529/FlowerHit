@@ -45,7 +45,7 @@ public class CircleRotation : MonoBehaviour
             {
                 if (GameManager.Instance.isGameOver) break;
                 transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, i));
-                yield return new WaitForSeconds(Random.Range(0.00005f, 0.000001f));
+                yield return new WaitForSeconds(Random.Range(0.007f, 0.0005f));
             }
         }
 
@@ -55,6 +55,7 @@ public class CircleRotation : MonoBehaviour
     private IEnumerator Shake()
     {
         isRot = true;
+        float time;
 
         while (!GameManager.Instance.isGameOver)
         {
@@ -62,7 +63,16 @@ public class CircleRotation : MonoBehaviour
             {
                 if (GameManager.Instance.isGameOver) break;
                 transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, i));
-                yield return new WaitForSeconds(Random.Range(0.00005f, 0.000001f));
+                if(i>180)
+                {
+                    time = Random.Range(0.05f, 0.000001f);
+                }
+                else
+                {
+                    time = Random.Range(0.05f, 0.000001f);
+                }
+
+                yield return new WaitForSeconds(time);
             }
         }
 
