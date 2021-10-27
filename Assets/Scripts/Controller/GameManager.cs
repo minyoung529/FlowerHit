@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using DG.Tweening;
 
 public class GameManager : MonoSingleton<GameManager>
@@ -92,6 +93,14 @@ public class GameManager : MonoSingleton<GameManager>
     #endregion
     private void Start()
     {
+        for(int i = 0; i< user.shovels.Count;i++)
+        {
+            user.shovels[i].index = i;
+        }
+        if(user.userShovel==null)
+        {
+            user.userShovel = user.shovels[0];
+        }
         spawnFlowers = circle.GetComponent<SpawnFlowers>();
         radius = circle.GetComponent<CircleCollider2D>().radius;
         knifePosition = new Vector2(0, -4);
@@ -100,6 +109,14 @@ public class GameManager : MonoSingleton<GameManager>
         UIManager.FirstSetting();
     }
 
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            user.coin += 500;
+            UIManager.UpdatePanel();
+        }
+    }
     public void SpawnKnife()
     {
         GameObject knifeObject;
@@ -246,5 +263,11 @@ public class GameManager : MonoSingleton<GameManager>
             }
         }
         return null;
+    }
+
+    public void OnClickLobby()
+    {
+        SoundManager.Instance.LobbyBGM();
+        SceneManager.LoadScene("Lobby");
     }
 }

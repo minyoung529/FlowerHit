@@ -30,8 +30,10 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Text helpText;
 
     [SerializeField] GameObject storePanelObject;
-
     List<ProductPanel> productPanels = new List<ProductPanel>();
+
+    [SerializeField] GameObject inventoryPanelObject;
+    List<InventoryPanel> inventoryPanels = new List<InventoryPanel>();
 
     public ParticleSystem money;
 
@@ -44,6 +46,7 @@ public class UIManager : MonoBehaviour
     private void Start()
     {
         InstantiatePanel();
+        InstantiateInventoryPanel();
     }
     public void UpdatePanel()
     {
@@ -60,6 +63,18 @@ public class UIManager : MonoBehaviour
             productPanels.Add(pp);
         }
         storePanelObject.SetActive(false);
+    }
+
+    private void InstantiateInventoryPanel()
+    {
+        for (int i = 0; i < GameManager.Instance.CurrentUser.shovels.Count; i++)
+        {
+            GameObject obj = Instantiate(inventoryPanelObject, inventoryPanelObject.transform.parent);
+            InventoryPanel ip = obj.GetComponent<InventoryPanel>();
+            ip.SetValue(i);
+            inventoryPanels.Add(ip);
+        }
+        inventoryPanelObject.SetActive(false);
     }
 
     public void GameOver()
@@ -227,5 +242,21 @@ public class UIManager : MonoBehaviour
         helpText.gameObject.SetActive(true);
 
         isEnd = false;
+    }
+
+    public void UpdateShovels()
+    {
+        foreach (InventoryPanel ip in inventoryPanels)
+        {
+            ip.UpdateData();
+        }
+    }
+
+    public void ActiveShovelsCheck()
+    {
+        foreach (InventoryPanel ip in inventoryPanels)
+        {
+            ip.InactiveCheck();
+        }
     }
 }

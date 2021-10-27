@@ -10,6 +10,7 @@ public class KnifeMove : MonoBehaviour
     private Rigidbody2D rigid = null;
     private Collider2D col = null;
 
+    [SerializeField] private SpriteRenderer spriteRenderer;
     public bool isTouch;
 
     void Start()
@@ -68,4 +69,15 @@ public class KnifeMove : MonoBehaviour
         rigid.angularVelocity = 0f;
     }
 
+    private void OnEnable()
+    {
+        ChangeSprite();
+    }
+    public void ChangeSprite()
+    {
+        if (spriteRenderer.sprite == GameManager.Instance.shovelSprites[GameManager.Instance.CurrentUser.userShovel.index])
+            return;
+
+        spriteRenderer.sprite = GameManager.Instance.shovelSprites[GameManager.Instance.CurrentUser.userShovel.index];
+    }
 }

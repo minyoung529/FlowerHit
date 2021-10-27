@@ -7,4 +7,6 @@ public class User
     public int coin;
 
     public List<Shovel> shovels;
+
+    public Shovel userShovel;
 }

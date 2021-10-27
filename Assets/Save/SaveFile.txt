@@ -1,6 +1,6 @@
 ﻿{
     "sellCount": 0,
-    "coin": 0,
+    "coin": 100,
     "shovels": [
         {
             "index": 0,
@@ -9,13 +9,33 @@
         },
         {
             "index": 1,
+            "isHaving": true,
+            "price": 1000
+        },
+        {
+            "index": 2,
+            "isHaving": true,
+            "price": 1000
+        },
+        {
+            "index": 3,
             "isHaving": false,
             "price": 1000
         },
         {
-            "index": 1,
+            "index": 4,
             "isHaving": false,
-            "price": 3000
+            "price": 1000
+        },
+        {
+            "index": 5,
+            "isHaving": false,
+            "price": 1000
         }
-    ]
+    ],
+    "userShovel": {
+        "index": 2,
+        "isHaving": true,
+        "price": 1000
+    }
 }
