@@ -124,8 +124,8 @@ TextureImporter:
       name: shovel_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 15
+        x: 18
+        y: 13
         width: 172
         height: 501
       alignment: 0
@@ -145,8 +145,8 @@ TextureImporter:
       name: shovel_1
       rect:
         serializedVersion: 2
-        x: 191
-        y: 15
+        x: 209
+        y: 13
         width: 172
         height: 501
       alignment: 0
@@ -166,8 +166,8 @@ TextureImporter:
       name: shovel_2
       rect:
         serializedVersion: 2
-        x: 377
-        y: 15
+        x: 395
+        y: 13
         width: 172
         height: 501
       alignment: 0
@@ -187,8 +187,8 @@ TextureImporter:
       name: shovel_3
       rect:
         serializedVersion: 2
-        x: 561
-        y: 15
+        x: 579
+        y: 13
         width: 172
         height: 501
       alignment: 0
@@ -208,8 +208,8 @@ TextureImporter:
       name: shovel_4
       rect:
         serializedVersion: 2
-        x: 758
-        y: 15
+        x: 776
+        y: 13
         width: 172
         height: 501
       alignment: 0
@@ -229,8 +229,8 @@ TextureImporter:
       name: shovel_5
       rect:
         serializedVersion: 2
-        x: 942
-        y: 15
+        x: 960
+        y: 13
         width: 172
         height: 501
       alignment: 0
