@@ -47,6 +47,8 @@ public class UIManager : MonoBehaviour
     {
         InstantiatePanel();
         InstantiateInventoryPanel();
+
+        AppearGuest();
     }
     public void UpdatePanel()
     {
@@ -208,12 +210,10 @@ public class UIManager : MonoBehaviour
         if (isAngry)
         {
             guest.DOColor(Color.red, 1.5f);
-        }
-
-        if (isAngry)
-        {
             guestText.DOText(GameManager.Instance.angryScript[Random.Range(0, GameManager.Instance.angryScript.Length)], 1f);
             guestScript.Angry();
+
+            SoundManager.Instance.AngrySound();
         }
         else
         {
@@ -222,26 +222,38 @@ public class UIManager : MonoBehaviour
             GameManager.Instance.CurrentUser.coin += 100;
             money.Play();
             UpdatePanel();
+            SoundManager.Instance.HappySound();
         }
 
         yield return new WaitForSeconds(2.6f);
-        guest.transform.DOMove(new Vector3(5, -2, 0), 0.5f).OnComplete(() => guest.DOColor(Color.white, 0f));
 
+        guest.transform.DOMove(new Vector3(5, -2, 0), 0.5f).OnComplete(() => guest.DOColor(Color.white, 0f));
         speechBubble.transform.DOScale(0f, 0.3f);
+
         yield return new WaitForSeconds(Random.Range(2f, 4f));
+
+        AppearGuest();
+        GameManager.Instance.Pooling();
+
+        isEnd = false;
+    }
+
+    public void AppearGuest()
+    {
         guestText.text = "";
         guestText.DOText(GameManager.Instance.guestOrder[Random.Range(0, GameManager.Instance.guestOrder.Length)], 1f);
+
         speechBubble.transform.DOScale(1f, 0.3f);
+
         guest.transform.position = new Vector3(-5, -2, 0);
         guest.sprite = guests[Random.Range(0, guests.Length)];
         guest.transform.DOMove(new Vector3(0, -2, 0), 0.3f);
 
         gameOverPanel.gameObject.SetActive(false);
         orderPanel.gameObject.SetActive(false);
-        GameManager.Instance.Pooling();
         helpText.gameObject.SetActive(true);
 
-        isEnd = false;
+        SoundManager.Instance.DdiringSound();
     }
 
     public void UpdateShovels()

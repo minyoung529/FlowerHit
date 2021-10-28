@@ -1,6 +1,6 @@
 ﻿{
     "sellCount": 0,
-    "coin": 100,
+    "coin": 700,
     "shovels": [
         {
             "index": 0,

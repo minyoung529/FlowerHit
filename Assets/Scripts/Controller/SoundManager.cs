@@ -20,6 +20,7 @@ public class SoundManager : MonoSingleton<SoundManager>
 
     [SerializeField] AudioClip malangSound;
     [SerializeField] AudioClip closeSound;
+    [SerializeField] AudioClip ddiringSound;
 
     private void Awake()
     {
@@ -43,5 +44,43 @@ public class SoundManager : MonoSingleton<SoundManager>
         backgroundAudio.Stop();
         backgroundAudio.clip = inGameBGM;
         backgroundAudio.Play();
+    }
+
+    public void ButtonSound(int index)
+    {
+        if (index == 0)
+        {
+            effectSoundAudio.PlayOneShot(malangSound);
+        }
+
+        else if (index == 1)
+        {
+            effectSoundAudio.PlayOneShot(closeSound);
+        }
+    }
+
+    public void AngrySound()
+    {
+        effectSoundAudio.PlayOneShot(angrySound);
+    }
+
+    public void FailSound()
+    {
+        effectSoundAudio.PlayOneShot(failSound);
+    }
+
+    public void HappySound()
+    {
+        effectSoundAudio.PlayOneShot(happySound);
+    }
+
+    public void SuccessSound()
+    {
+        effectSoundAudio.PlayOneShot(successSound);
+    }
+
+    public void DdiringSound()
+    {
+        effectSoundAudio.PlayOneShot(ddiringSound);
     }
 }

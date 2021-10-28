@@ -204,7 +204,10 @@ public class GameManager : MonoSingleton<GameManager>
         {
             //UIManager.OnClickRestart();
             UIManager.GoMainScene();
+            isGameOver = true;
+
             UIManager.Success();
+            SoundManager.Instance.SuccessSound();
             return;
         }
 
@@ -233,6 +236,7 @@ public class GameManager : MonoSingleton<GameManager>
     public void GameOver()
     {
         UIManager.GameOver();
+        SoundManager.Instance.FailSound();
         isGameOver = true;
     }
 
@@ -268,6 +272,6 @@ public class GameManager : MonoSingleton<GameManager>
     public void OnClickLobby()
     {
         SoundManager.Instance.LobbyBGM();
-        SceneManager.LoadScene("Lobby");
+        SceneManager.LoadScene("Main");
     }
 }
