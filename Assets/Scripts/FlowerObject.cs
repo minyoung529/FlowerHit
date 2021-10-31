@@ -96,11 +96,11 @@ public class FlowerObject : MonoBehaviour
 
     public void Despawn()
     {
-        gameObject.SetActive(false);
-        transform.SetParent(GameManager.Instance.pool);
         transform.position = Vector2.zero;
         particle.transform.localPosition = Vector2.one;
         spriteRenderer.color = Color.white;
+        gameObject.SetActive(false);
+        transform.SetParent(GameManager.Instance.pool);
     }
 
     IEnumerator RedLight()

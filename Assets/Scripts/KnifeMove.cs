@@ -32,6 +32,7 @@ public class KnifeMove : MonoBehaviour
             GameManager.Instance.curCount++;
             GameManager.Instance.Complete();
             rigid.velocity = Vector3.zero;
+            GameManager.Instance.isShovel = true;
             GameManager.Instance.isReady = false;
             SetZero();
         }
@@ -55,7 +56,7 @@ public class KnifeMove : MonoBehaviour
     {
         gameObject.SetActive(false);
         transform.SetParent(GameManager.Instance.pool);
-        transform.position = GameManager.Instance.knifePosition;
+        transform.position = GameManager.Instance.shovelPosition;
         transform.rotation = Quaternion.identity;
         transform.localScale = new Vector3(0.8f, 0.8f, 0.8f);
         col.enabled = true;

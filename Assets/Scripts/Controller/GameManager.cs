@@ -11,11 +11,12 @@ public class GameManager : MonoSingleton<GameManager>
     private readonly string SAVE_FILENAME = "/SaveFile.txt";
 
     [SerializeField] private GameObject knife;
-    public Vector2 knifePosition { get; private set; } = Vector2.zero;
+    public Vector2 shovelPosition { get; private set; } = Vector2.zero;
     [SerializeField] private GameObject circle = null;
     public Transform pool;
 
     public bool isGameOver = false;
+    public bool isShovel = false;
 
     private List<KnifeMove> knifeMoves = new List<KnifeMove>();
 
@@ -54,8 +55,11 @@ public class GameManager : MonoSingleton<GameManager>
     #region 데이터저장
     private void Awake()
     {
+#if DEVELOPMENT_BUILD
         SAVE_PATH = Application.dataPath + "/Save";
-        //SAVE_PATH = Application.dataPath + "/Save";
+#else
+        SAVE_PATH = Application.persistentDataPath + "/Save";
+#endif
         if (!Directory.Exists(SAVE_PATH))
         {
             Directory.CreateDirectory(SAVE_PATH);
@@ -84,39 +88,37 @@ public class GameManager : MonoSingleton<GameManager>
 
     private void SaveToJson()
     {
+#if DEVELOPMENT_BUILD
         SAVE_PATH = Application.dataPath + "/Save";
+#else
+        SAVE_PATH = Application.persistentDataPath + "/Save";
+#endif
 
         if (user == null) return;
         string json = JsonUtility.ToJson(user, true);
         File.WriteAllText(SAVE_PATH + SAVE_FILENAME, json, System.Text.Encoding.UTF8);
     }
-    #endregion
+#endregion
     private void Start()
     {
         for(int i = 0; i< user.shovels.Count;i++)
         {
             user.shovels[i].index = i;
         }
+
         if(user.userShovel==null)
         {
             user.userShovel = user.shovels[0];
         }
+
         spawnFlowers = circle.GetComponent<SpawnFlowers>();
         radius = circle.GetComponent<CircleCollider2D>().radius;
-        knifePosition = new Vector2(0, -4);
+        shovelPosition = new Vector2(0, -4);
         UIManager = GetComponent<UIManager>();
 
         UIManager.FirstSetting();
     }
 
-    private void Update()
-    {
-        if(Input.GetKeyDown(KeyCode.Space))
-        {
-            user.coin += 500;
-            UIManager.UpdatePanel();
-        }
-    }
     public void SpawnKnife()
     {
         GameObject knifeObject;
@@ -126,7 +128,7 @@ public class GameManager : MonoSingleton<GameManager>
 
         knifeMoves.Add(knifeMove);
 
-        knifeObject.transform.position = knifePosition;
+        knifeObject.transform.position = shovelPosition;
         knifeObject.SetActive(true);
     }
 
@@ -143,6 +145,8 @@ public class GameManager : MonoSingleton<GameManager>
     }
     public void OnClickRestart()
     {
+        if (UIManager.isEnd) return;
+
         StartCoroutine(WaitReady());
         isGameOver = false;
         flowerIndex = 0;
@@ -229,6 +233,7 @@ public class GameManager : MonoSingleton<GameManager>
         if (isReady) return;
 
         currentFlower = UIManager.currentFlowers[flowerIndex];
+        SoundManager.Instance.ShovelSound();
         currentKnife.GoGo();
         isReady = true;
     }

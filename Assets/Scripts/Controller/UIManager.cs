@@ -203,7 +203,9 @@ public class UIManager : MonoBehaviour
     {
         isEnd = true;
         helpText.gameObject.SetActive(false);
+
         yield return new WaitForSeconds(2f);
+        GameManager.Instance.Pooling();
 
         guestText.text = "";
 
@@ -233,7 +235,6 @@ public class UIManager : MonoBehaviour
         yield return new WaitForSeconds(Random.Range(2f, 4f));
 
         AppearGuest();
-        GameManager.Instance.Pooling();
 
         isEnd = false;
     }

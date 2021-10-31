@@ -8,6 +8,8 @@ public class SpawnFlowers : MonoBehaviour
     [SerializeField] private GameObject flower;
     private List<FlowerObject> flowerObjects = new List<FlowerObject>();
 
+    private readonly string flowerObjectName = "Flower";
+
     public void FlowerSpawn(Flower flower)
     {
         GameObject obj = SpawnOrPool();
@@ -19,7 +21,7 @@ public class SpawnFlowers : MonoBehaviour
 
         for (int i = 0; i < flowerObjects.Count; i++)
         {
-            while (flowerObjects[i].gameObject.activeSelf && Vector2.Distance(flowerObjects[i].transform.localPosition, obj.transform.localPosition) < 0.3f)
+            while (flowerObjects[i].gameObject.activeSelf && Vector2.Distance(flowerObjects[i].transform.localPosition, obj.transform.localPosition) < 0.35f)
             {
                 SetRandomPos(obj);
                 i = 0;
@@ -51,9 +53,9 @@ public class SpawnFlowers : MonoBehaviour
 
     private GameObject SpawnOrPool()
     {
-        if (GameManager.Instance.CheckPool("Flower"))
+        if (GameManager.Instance.CheckPool(flowerObjectName))
         {
-            return GameManager.Instance.ReturnPoolObject("Flower");
+            return GameManager.Instance.ReturnPoolObject(flowerObjectName);
         }
 
         else

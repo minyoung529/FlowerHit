@@ -22,6 +22,9 @@ public class SoundManager : MonoSingleton<SoundManager>
     [SerializeField] AudioClip closeSound;
     [SerializeField] AudioClip ddiringSound;
 
+    [SerializeField] AudioClip shovelSound;
+    [SerializeField] AudioClip okaySound;
+
     private void Awake()
     {
         DontDestroyOnLoad(this);
@@ -82,5 +85,15 @@ public class SoundManager : MonoSingleton<SoundManager>
     public void DdiringSound()
     {
         effectSoundAudio.PlayOneShot(ddiringSound);
+    }
+
+    public void ShovelSound()
+    {
+        effectSoundAudio.PlayOneShot(shovelSound);
+    }
+
+    public void OkaySound()
+    {
+        effectSoundAudio.PlayOneShot(okaySound);
     }
 }
