@@ -179,6 +179,8 @@ public class UIManager : MonoBehaviour
 
     public void GoMainScene()
     {
+        GameManager.Instance.GetCircleRotation().StopRot();
+
         mainGameScene.transform.DOMove(Vector3.zero, 1f);
         mainUIScene.transform.DOMove(Vector3.zero, 1f);
 

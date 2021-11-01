@@ -13,6 +13,7 @@ public class GameManager : MonoSingleton<GameManager>
     [SerializeField] private GameObject knife;
     public Vector2 shovelPosition { get; private set; } = Vector2.zero;
     [SerializeField] private GameObject circle = null;
+    private CircleRotation circleRotation;
     public Transform pool;
 
     public bool isGameOver = false;
@@ -112,6 +113,7 @@ public class GameManager : MonoSingleton<GameManager>
         }
 
         spawnFlowers = circle.GetComponent<SpawnFlowers>();
+        circleRotation = circle.GetComponent<CircleRotation>();
         radius = circle.GetComponent<CircleCollider2D>().radius;
         shovelPosition = new Vector2(0, -4);
         UIManager = GetComponent<UIManager>();
@@ -137,6 +139,11 @@ public class GameManager : MonoSingleton<GameManager>
         return circle;
     }
 
+    public CircleRotation GetCircleRotation()
+    {
+        return circleRotation;
+    }
+
     public void OnClickBubble()
     {
         if (UIManager.isEnd) return;
@@ -152,7 +159,6 @@ public class GameManager : MonoSingleton<GameManager>
         flowerIndex = 0;
         UIManager.gameOverPanel.gameObject.SetActive(false);
         UIManager.OnClickRestart();
-        circle.SetActive(false);
         
         SpawnOrInstantiate();
         ResetCount();

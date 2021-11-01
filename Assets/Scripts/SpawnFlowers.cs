@@ -12,6 +12,7 @@ public class SpawnFlowers : MonoBehaviour
 
     public void FlowerSpawn(Flower flower)
     {
+        Debug.Log("spawn");
         GameObject obj = SpawnOrPool();
         FlowerObject flowerObj = flowerObjects.Find(flower => flower.gameObject == obj);
         flowerObj ??= obj.GetComponent<FlowerObject>();

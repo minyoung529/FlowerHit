@@ -35,7 +35,7 @@ public class FlowerObject : MonoBehaviour
             particle.Play();
             GameManager.Instance.UIManager.CheckFlowerIcons(GameManager.Instance.flowerIndex);
             GameManager.Instance.flowerIndex++;
-            if(GameManager.Instance.flowerIndex < GameManager.Instance.UIManager.currentFlowers.Count)
+            if (GameManager.Instance.flowerIndex < GameManager.Instance.UIManager.currentFlowers.Count)
             {
                 GameManager.Instance.currentFlower = GameManager.Instance.UIManager.currentFlowers[GameManager.Instance.flowerIndex];
             }
@@ -47,11 +47,21 @@ public class FlowerObject : MonoBehaviour
 
     public void SetFlower(Flower flower)
     {
-        float radius = GameManager.Instance.radius;
         this.flower = flower;
 
         spriteRenderer.sprite = GameManager.Instance.flowerSprites[flower.index];
         gameObject.SetActive(true);
+
+        transform.DOScale(0f, 0f);
+        transform.DOScale(1f, 0.5f);
+
+        SetRot();
+        EditColliderSize();
+    }
+
+    private void SetRot()
+    {
+        float radius = GameManager.Instance.radius;
 
         float rotZ = 180 - (180f * (transform.localPosition.y + radius) * (1 / (radius * 2)))
             + GameManager.Instance.GetCircle().transform.rotation.z;
@@ -62,9 +72,12 @@ public class FlowerObject : MonoBehaviour
         }
 
         transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, rotZ));
-        transform.DOScale(0f, 0f);
-        transform.DOScale(1f, 0.5f);
-        EditColliderSize();
+
+    }
+
+    private void Update()
+    {
+        SetRot();
     }
 
     private void EditColliderSize()
@@ -125,7 +138,7 @@ public class FlowerObject : MonoBehaviour
     private IEnumerator Active()
     {
         spriteRenderer.color = Color.clear;
-        yield return new WaitForSeconds(pm.duration+1f);
+        yield return new WaitForSeconds(pm.duration + 1f);
         gameObject.SetActive(false);
         spriteRenderer.color = Color.white;
         yield break;

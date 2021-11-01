@@ -24,5 +24,6 @@ public class OnClickSpeechBubble : MonoBehaviour
         gameUI.GoToGame_Game();
         gameObj.GoToGame_Game();
         SoundManager.Instance.OkaySound();
+        GameManager.Instance.GetCircleRotation().StartRot();
     }
 }
