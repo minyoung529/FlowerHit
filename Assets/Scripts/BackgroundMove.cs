@@ -4,15 +4,18 @@ using UnityEngine;
 
 public class BackgroundMove : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    private MeshRenderer meshRenderer;
+    private Vector2 offset = Vector2.zero;
+    float speed = 0.1f;
 
-    // Update is called once per frame
-    void Update()
+    private void Start()
     {
-        
+        meshRenderer = GetComponent<MeshRenderer>();
+    }
+    private void Update()
+    {
+        offset.x += speed * Time.deltaTime;
+        meshRenderer.material.SetTextureOffset("_MainTex", offset);
+        Debug.Log(meshRenderer.materials[0].mainTextureOffset);
     }
 }

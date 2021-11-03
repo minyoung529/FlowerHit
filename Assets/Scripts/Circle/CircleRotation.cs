@@ -102,7 +102,7 @@ public class CircleRotation : MonoBehaviour
 
         if (Random.Range(0, 50) == 0)
         {
-            speed = 150;
+            speed = 130;
         }
         else
         {
