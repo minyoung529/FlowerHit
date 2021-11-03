@@ -23,6 +23,6 @@ public class ButtonSound : MonoBehaviour
 
     public void OnClickButton()
     {
-        SoundManager.Instance.ButtonSound((int)soundType);
+        SoundManager.Instance?.ButtonSound((int)soundType);
     }
 }

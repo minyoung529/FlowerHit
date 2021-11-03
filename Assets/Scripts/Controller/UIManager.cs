@@ -147,7 +147,6 @@ public class UIManager : MonoBehaviour
             {
                 orderImages[i].color = Color.clear;
             }
-
         }
     }
 
@@ -217,7 +216,7 @@ public class UIManager : MonoBehaviour
             guestText.DOText(GameManager.Instance.angryScript[Random.Range(0, GameManager.Instance.angryScript.Length)], 1f);
             guestScript.Angry();
 
-            SoundManager.Instance.AngrySound();
+            SoundManager.Instance?.AngrySound();
         }
         else
         {
@@ -226,7 +225,7 @@ public class UIManager : MonoBehaviour
             GameManager.Instance.CurrentUser.coin += 100;
             money.Play();
             UpdatePanel();
-            SoundManager.Instance.HappySound();
+            SoundManager.Instance?.HappySound();
         }
 
         yield return new WaitForSeconds(2.6f);
@@ -234,7 +233,7 @@ public class UIManager : MonoBehaviour
         guest.transform.DOMove(new Vector3(5, -2, 0), 0.5f).OnComplete(() => guest.DOColor(Color.white, 0f));
         speechBubble.transform.DOScale(0f, 0.3f);
 
-        yield return new WaitForSeconds(Random.Range(2f, 4f));
+        yield return new WaitForSeconds(3f);
 
         AppearGuest();
 
@@ -256,7 +255,7 @@ public class UIManager : MonoBehaviour
         orderPanel.gameObject.SetActive(false);
         helpText.gameObject.SetActive(true);
 
-        SoundManager.Instance.DdiringSound();
+        SoundManager.Instance?.DdiringSound();
     }
 
     public void UpdateShovels()

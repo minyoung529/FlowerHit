@@ -8,11 +8,8 @@ public class SpawnFlowers : MonoBehaviour
     [SerializeField] private GameObject flower;
     private List<FlowerObject> flowerObjects = new List<FlowerObject>();
 
-    private readonly string flowerObjectName = "Flower";
-
     public void FlowerSpawn(Flower flower)
     {
-        Debug.Log("spawn");
         GameObject obj = SpawnOrPool();
         FlowerObject flowerObj = flowerObjects.Find(flower => flower.gameObject == obj);
         flowerObj ??= obj.GetComponent<FlowerObject>();
@@ -54,9 +51,9 @@ public class SpawnFlowers : MonoBehaviour
 
     private GameObject SpawnOrPool()
     {
-        if (GameManager.Instance.CheckPool(flowerObjectName))
+        if (GameManager.Instance.CheckPool(NameManager.FLOWER_TAG))
         {
-            return GameManager.Instance.ReturnPoolObject(flowerObjectName);
+            return GameManager.Instance.ReturnPoolObject(NameManager.FLOWER_TAG);
         }
 
         else

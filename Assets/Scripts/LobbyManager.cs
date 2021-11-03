@@ -7,12 +7,12 @@ public class LobbyManager : MonoBehaviour
 {
     private void Start()
     {
-        SoundManager.Instance.LobbyBGM();
+        SoundManager.Instance?.LobbyBGM();
     }
 
     public void OnClickGame()
     {
-        SceneManager.LoadScene("Game");
-        SoundManager.Instance.InGameBGM();
+        SceneManager.LoadScene(NameManager.GAME_SCENE);
+        SoundManager.Instance?.InGameBGM();
     }
 }

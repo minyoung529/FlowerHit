@@ -9,7 +9,6 @@ public class GameManager : MonoSingleton<GameManager>
 {
     private string SAVE_PATH = "";
     private readonly string SAVE_FILENAME = "/SaveFile.txt";
-
     [SerializeField] private GameObject knife;
     public Vector2 shovelPosition { get; private set; } = Vector2.zero;
     [SerializeField] private GameObject circle = null;
@@ -21,9 +20,8 @@ public class GameManager : MonoSingleton<GameManager>
 
     private List<KnifeMove> knifeMoves = new List<KnifeMove>();
 
-    public int curCount = 0;
-    public int maxCount = 0;
-    public int scoreCount = 0;
+    public int curCount { get; private set; } = 0;
+    public int maxCount { get; private set; } = 0;
 
     public bool isReady = false;
 
@@ -34,7 +32,6 @@ public class GameManager : MonoSingleton<GameManager>
     [SerializeField]
     private User user;
     public User CurrentUser { get { return user; } }
-
     public UIManager UIManager { get; private set; }
 
     public List<Flower> flowers = new List<Flower>();
@@ -52,6 +49,8 @@ public class GameManager : MonoSingleton<GameManager>
     public string[] angryScript;
 
     public Sprite[] shovelSprites;
+
+    private bool isStop;
 
     #region 데이터저장
     private void Awake()
@@ -99,15 +98,15 @@ public class GameManager : MonoSingleton<GameManager>
         string json = JsonUtility.ToJson(user, true);
         File.WriteAllText(SAVE_PATH + SAVE_FILENAME, json, System.Text.Encoding.UTF8);
     }
-#endregion
+    #endregion
     private void Start()
     {
-        for(int i = 0; i< user.shovels.Count;i++)
+        for (int i = 0; i < user.shovels.Count; i++)
         {
             user.shovels[i].index = i;
         }
 
-        if(user.userShovel==null)
+        if (user.userShovel == null)
         {
             user.userShovel = user.shovels[0];
         }
@@ -119,6 +118,14 @@ public class GameManager : MonoSingleton<GameManager>
         UIManager = GetComponent<UIManager>();
 
         UIManager.FirstSetting();
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+
+        }
     }
 
     public void SpawnKnife()
@@ -159,7 +166,7 @@ public class GameManager : MonoSingleton<GameManager>
         flowerIndex = 0;
         UIManager.gameOverPanel.gameObject.SetActive(false);
         UIManager.OnClickRestart();
-        
+
         SpawnOrInstantiate();
         ResetCount();
     }
@@ -194,9 +201,9 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void SpawnOrInstantiate()
     {
-        if (CheckPool("Knife"))
+        if (CheckPool(NameManager.KNIFE_TAG))
         {
-            GameObject obj = ReturnPoolObject("Knife");
+            GameObject obj = ReturnPoolObject(NameManager.KNIFE_TAG);
             obj.SetActive(true);
             obj.transform.SetParent(pool.parent);
             currentKnife = knifeMoves.Find(knife => knife.gameObject == obj);
@@ -217,7 +224,7 @@ public class GameManager : MonoSingleton<GameManager>
             isGameOver = true;
 
             UIManager.Success();
-            SoundManager.Instance.SuccessSound();
+            SoundManager.Instance?.SuccessSound();
             return;
         }
 
@@ -239,7 +246,7 @@ public class GameManager : MonoSingleton<GameManager>
         if (isReady) return;
 
         currentFlower = UIManager.currentFlowers[flowerIndex];
-        SoundManager.Instance.ShovelSound();
+        SoundManager.Instance?.ShovelSound();
         currentKnife.GoGo();
         isReady = true;
     }
@@ -247,7 +254,7 @@ public class GameManager : MonoSingleton<GameManager>
     public void GameOver()
     {
         UIManager.GameOver();
-        SoundManager.Instance.FailSound();
+        SoundManager.Instance?.FailSound();
         isGameOver = true;
     }
 
@@ -282,7 +289,32 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void OnClickLobby()
     {
-        SoundManager.Instance.LobbyBGM();
-        SceneManager.LoadScene("Main");
+        SoundManager.Instance?.LobbyBGM();
+        SceneManager.LoadScene(NameManager.MAIN_SCENE);
+    }
+
+    public void StopGame()
+    {
+        if (isStop) return;
+        isStop = true;
+        Time.timeScale = 0;
+    }
+
+    public void GoBackToGame()
+    {
+        isStop = false;
+        Time.timeScale = 1;
+    }
+
+    public void GoToLobby()
+    {
+        isStop = false;
+        Time.timeScale = 1;
+        SceneManager.LoadScene(NameManager.MAIN_SCENE);
+    }
+
+    public void PlusCurrentCount()
+    {
+        curCount++;
     }
 }

@@ -29,7 +29,7 @@ public class KnifeMove : MonoBehaviour
         if (collision.gameObject.CompareTag("Circle"))
         {
             transform.SetParent(collision.transform);
-            GameManager.Instance.curCount++;
+            GameManager.Instance.PlusCurrentCount();
             GameManager.Instance.Complete();
             rigid.velocity = Vector3.zero;
             GameManager.Instance.isShovel = true;

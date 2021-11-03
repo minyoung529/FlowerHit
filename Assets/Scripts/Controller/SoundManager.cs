@@ -84,7 +84,7 @@ public class SoundManager : MonoSingleton<SoundManager>
 
     public void DdiringSound()
     {
-        effectSoundAudio.PlayOneShot(ddiringSound);
+        effectSoundAudio.PlayOneShot(ddiringSound); 
     }
 
     public void ShovelSound()

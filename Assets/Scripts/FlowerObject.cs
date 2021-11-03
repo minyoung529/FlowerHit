@@ -19,7 +19,7 @@ public class FlowerObject : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Knife")
+        if (collision.gameObject.tag == NameManager.KNIFE_TAG)
         {
             if (GameManager.Instance.currentKnife.isTouch) return;
 
@@ -35,11 +35,12 @@ public class FlowerObject : MonoBehaviour
             particle.Play();
             GameManager.Instance.UIManager.CheckFlowerIcons(GameManager.Instance.flowerIndex);
             GameManager.Instance.flowerIndex++;
+
             if (GameManager.Instance.flowerIndex < GameManager.Instance.UIManager.currentFlowers.Count)
             {
                 GameManager.Instance.currentFlower = GameManager.Instance.UIManager.currentFlowers[GameManager.Instance.flowerIndex];
             }
-            GameManager.Instance.scoreCount++;
+
             GameManager.Instance.UIManager.ChangeCurrentFlowerImage();
             StartCoroutine(Active());
         }
@@ -51,33 +52,26 @@ public class FlowerObject : MonoBehaviour
 
         spriteRenderer.sprite = GameManager.Instance.flowerSprites[flower.index];
         gameObject.SetActive(true);
-
+        SetRot();
         transform.DOScale(0f, 0f);
         transform.DOScale(1f, 0.5f);
 
-        SetRot();
         EditColliderSize();
     }
 
     private void SetRot()
     {
-        float radius = GameManager.Instance.radius;
+        Vector2 direction = new Vector2(
+        transform.position.x - 0,
+        transform.position.y - 1.2f
+        );
 
-        float rotZ = 180 - (180f * (transform.localPosition.y + radius) * (1 / (radius * 2)))
-            + GameManager.Instance.GetCircle().transform.rotation.z;
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
 
-        if (transform.localPosition.x > 0)
-        {
-            rotZ *= -1f;
-        }
+        Quaternion angleAxis = Quaternion.AngleAxis(angle - 90f, Vector3.forward);
+        Quaternion rotation = Quaternion.Slerp(transform.rotation, angleAxis, 1f);
+        transform.rotation = rotation;
 
-        transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, rotZ));
-
-    }
-
-    private void Update()
-    {
-        SetRot();
     }
 
     private void EditColliderSize()
@@ -106,7 +100,6 @@ public class FlowerObject : MonoBehaviour
 
         }
     }
-
     public void Despawn()
     {
         transform.position = Vector2.zero;
@@ -120,12 +113,6 @@ public class FlowerObject : MonoBehaviour
     {
         for (int i = 0; i < 5; i++)
         {
-            if (!GameManager.Instance.isGameOver)
-            {
-                spriteRenderer.color = Color.white;
-                yield break;
-            }
-
             spriteRenderer.DOColor(Color.red, 0.2f);
             yield return new WaitForSeconds(0.2f);
             spriteRenderer.DOColor(Color.white, 0.2f);
@@ -133,6 +120,7 @@ public class FlowerObject : MonoBehaviour
         }
 
         spriteRenderer.color = Color.white;
+        Despawn();
     }
 
     private IEnumerator Active()
