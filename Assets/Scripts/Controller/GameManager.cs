@@ -114,18 +114,10 @@ public class GameManager : MonoSingleton<GameManager>
         spawnFlowers = circle.GetComponent<SpawnFlowers>();
         circleRotation = circle.GetComponent<CircleRotation>();
         radius = circle.GetComponent<CircleCollider2D>().radius;
-        shovelPosition = new Vector2(0, -4);
+        shovelPosition = new Vector2(0, -4.3f);
         UIManager = GetComponent<UIManager>();
 
         UIManager.FirstSetting();
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-
-        }
     }
 
     public void SpawnKnife()
@@ -219,7 +211,6 @@ public class GameManager : MonoSingleton<GameManager>
     {
         if (flowerIndex == UIManager.currentFlowers.Count)
         {
-            //UIManager.OnClickRestart();
             UIManager.GoMainScene();
             isGameOver = true;
 
@@ -244,7 +235,7 @@ public class GameManager : MonoSingleton<GameManager>
     public void OnClick()
     {
         if (isReady) return;
-
+        if (isGameOver) return;
         currentFlower = UIManager.currentFlowers[flowerIndex];
         SoundManager.Instance?.ShovelSound();
         currentKnife.GoGo();

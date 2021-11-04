@@ -13,7 +13,7 @@ public class KnifeMove : MonoBehaviour
     [SerializeField] private SpriteRenderer spriteRenderer;
     public bool isTouch;
 
-    void Start()
+    void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();
         col = GetComponent<Collider2D>();
@@ -21,12 +21,12 @@ public class KnifeMove : MonoBehaviour
 
     public void GoGo()
     {
-        rigid.AddForce(Vector2.up * spped * 65);
+        rigid.AddForce(Vector2.up * spped * 55);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Circle"))
+        if (collision.gameObject.CompareTag(NameManager.CIRCLE_TAG))
         {
             transform.SetParent(collision.transform);
             GameManager.Instance.PlusCurrentCount();
@@ -41,7 +41,8 @@ public class KnifeMove : MonoBehaviour
     public void OnCollisionEnter2D(Collision2D collision)
     {
         if (isTouch) return;
-        if (collision.gameObject.CompareTag("Knife"))
+
+        if (collision.gameObject.CompareTag(NameManager.KNIFE_TAG))
         {
             transform.SetParent(GameManager.Instance.GetCircle().transform);
             GameManager.Instance.GameOver();

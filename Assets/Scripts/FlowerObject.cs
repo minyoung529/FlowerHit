@@ -21,19 +21,27 @@ public class FlowerObject : MonoBehaviour
     {
         if (collision.gameObject.tag == NameManager.KNIFE_TAG)
         {
-            if (GameManager.Instance.currentKnife.isTouch) return;
-
-            if (flower.flowerName != GameManager.Instance.currentFlower.flowerName)
+            if (GameManager.Instance.currentKnife.isTouch)
             {
-                GameManager.Instance.GameOver();
-                GameManager.Instance.UIManager.Failure();
-                StartCoroutine(RedLight());
                 return;
             }
 
             GameManager.Instance.currentKnife.isTouch = true;
+            if (flower.flowerName != GameManager.Instance.currentFlower.flowerName 
+                && GameManager.Instance.flowerIndex == GameManager.Instance.curCount)
+            {
+                GameManager.Instance.GameOver();
+                GameManager.Instance.UIManager.Failure();
+                StartCoroutine(RedLight());
+
+                collision.transform.SetParent(GameManager.Instance.GetCircle().transform);
+
+                return;
+            }
+
             particle.Play();
             GameManager.Instance.UIManager.CheckFlowerIcons(GameManager.Instance.flowerIndex);
+
             GameManager.Instance.flowerIndex++;
 
             if (GameManager.Instance.flowerIndex < GameManager.Instance.UIManager.currentFlowers.Count)
@@ -80,7 +88,7 @@ public class FlowerObject : MonoBehaviour
         {
             case "µ¥ÀÌÁö":
                 col.offset = new Vector2(0f, 0.5f);
-                col.size = new Vector2(0.7f, 1f);
+                col.size = new Vector2(0.58f, 1f);
                 break;
 
             case "Æ«¸³":

@@ -206,9 +206,10 @@ public class UIManager : MonoBehaviour
         helpText.gameObject.SetActive(false);
 
         yield return new WaitForSeconds(2f);
-        GameManager.Instance.Pooling();
 
         guestText.text = "";
+        GameManager.Instance.Pooling();
+
 
         if (isAngry)
         {
