@@ -3,6 +3,7 @@
 동아리 GUI에서 작업한 'Knife Hit' 모작 게임인 개인 산출물입니다.</br>
 
 ## 게임 소개
+<img src="https://user-images.githubusercontent.com/77655318/170826739-9503e1b5-029b-4613-bfa5-c36672e7cd6e.png" width="200" height="200"></br></br>
 손님이 원하는 꽃을 정원에서 순서대로 파내자! 삽을 던져 돌아가는 꽃들을 적중시킨다!
 
 ## 게임 특징
